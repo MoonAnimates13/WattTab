@@ -1,9 +1,14 @@
 const express = require('express');
 const fetch = require('node-fetch');
+const path = require('path');
+
 const app = express();
+const PORT = process.env.PORT || 3000;
 
-app.use(express.static('public'));
+// Serve static frontend
+app.use(express.static(path.join(__dirname, 'public')));
 
+// Proxy route
 app.get('/canvas', async (req, res) => {
   const { q } = req.query;
   if (!q) return res.status(400).send('Missing URL');
@@ -11,18 +16,17 @@ app.get('/canvas', async (req, res) => {
   try {
     const decodedUrl = Buffer.from(q, 'base64').toString('utf-8');
     const response = await fetch(decodedUrl);
-    const contentType = response.headers.get('content-type');
+    const contentType = response.headers.get('content-type') || 'text/html';
 
-    res.setHeader('Content-Type', contentType || 'text/html');
+    res.setHeader('Content-Type', contentType);
     const body = await response.text();
     res.status(200).send(body);
-  } catch (error) {
-    console.error('Error fetching URL:', error.message);
-    res.status(500).send('Error fetching the requested URL');
+  } catch (err) {
+    console.error('Proxy error:', err.message);
+    res.status(500).send('Internal Proxy Error');
   }
 });
 
-const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
-  console.log(`Server is running on port ${PORT}`);
+  console.log(`Server running on port ${PORT}`);
 });
