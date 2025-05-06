@@ -1,13 +1,14 @@
 {
-  "name": "stealth-proxy",
+  "name": "watt-tab",
   "version": "1.0.0",
-  "main": "server.js",
   "scripts": {
-   "scripts": {
-  "start": "node src/server.js"
-},
+    "start": "node src/server.js"
+  },
   "dependencies": {
-    "express": "^4.18.2",
-    "node-fetch": "^2.6.11"
+    "express": "^4.17.1"
+  },
+  "devDependencies": {},
+  "engines": {
+    "node": ">=18.0.0"
   }
 }
