@@ -1,33 +1,18 @@
 const express = require('express');
-const fetch = require('node-fetch');
 const path = require('path');
-
 const app = express();
-const PORT = process.env.PORT || 3000;
 
-// Serve static files from the public directory
+// Serve static files from the 'public' folder
 app.use(express.static(path.join(__dirname, 'public')));
 
-// Proxy route
-app.get('/canvas', async (req, res) => {
-  const { q } = req.query;
-  if (!q) return res.status(400).send('Missing URL');
-
-  try {
-    const decodedUrl = Buffer.from(q, 'base64').toString('utf-8');
-    const response = await fetch(decodedUrl);
-    const contentType = response.headers.get('content-type') || 'text/html';
-
-    res.setHeader('Content-Type', contentType);
-    const body = await response.text();
-    res.status(200).send(body);
-  } catch (err) {
-    console.error('Proxy error:', err.message);
-    res.status(500).send('Internal Proxy Error');
-  }
+// Define a route to handle the main page
+app.get('/', (req, res) => {
+  res.sendFile(path.join(__dirname, 'public', 'index.html'));
 });
 
 // Start the server
-app.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`);
+const port = process.env.PORT || 3000;
+app.listen(port, () => {
+  console.log(`Server is running on port ${port}`);
 });
+
