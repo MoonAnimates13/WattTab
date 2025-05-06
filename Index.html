@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Study Notes</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: #f3f4f6;
+      color: #111827;
+      padding: 20px;
+    }
+    h1 {
+      font-size: 1.5rem;
+    }
+    #proxyForm, #zoomControls, iframe {
+      display: none;
+    }
+    #proxyForm {
+      margin-top: 20px;
+    }
+    input[type="text"] {
+      width: 300px;
+      padding: 8px;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+    }
+    button {
+      padding: 8px 12px;
+      border: none;
+      border-radius: 6px;
+      background-color: #2563eb;
+      color: white;
+      cursor: pointer;
+    }
+    iframe {
+      width: 98%;
+      height: 90vh;
+      margin-top: 15px;
+      border-radius: 10px;
+      border: 1px solid #ddd;
+    }
+  </style>
+</head>
+<body>
+  <h1>Study Notes</h1>
+  <p>This is your private note space.</p>
+
+  <form id="proxyForm">
+    <input type="text" id="urlInput" placeholder="Enter URL (e.g., example.com)" />
+    <button type="submit">Open</button>
+  </form>
+
+  <div id="zoomControls">
+    <label for="zoomSelect">Zoom:</label>
+    <select id="zoomSelect">
+      <option value="0.75">75%</option>
+      <option value="1.0" selected>100%</option>
+      <option value="1.25">125%</option>
+      <option value="1.5">150%</option>
+    </select>
+  </div>
+
+  <iframe id="proxyFrame"></iframe>
+
+  <script>
+    const form = document.getElementById('proxyForm');
+    const input = document.getElementById('urlInput');
+    const frame = document.getElementById('proxyFrame');
+    const zoomControls = document.getElementById('zoomControls');
+    const zoomSelect = document.getElementById('zoomSelect');
+
+    document.addEventListener('keydown', (e) => {
+      if (e.ctrlKey && e.key === '9') {
+        e.preventDefault();
+        form.style.display = 'block';
+        zoomControls.style.display = 'block';
+        input.focus();
+      }
+    });
+
+    form.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const rawUrl = input.value.startsWith('http') ? input.value : 'http://' + input.value;
+      const encoded = btoa(rawUrl);
+      frame.src = `/canvas?q=${encoded}`;
+      frame.style.display = 'block';
+    });
+
+    zoomSelect.addEventListener('change', () => {
+      frame.style.zoom = zoomSelect.value;
+    });
+  </script>
+</body>
+</html>
